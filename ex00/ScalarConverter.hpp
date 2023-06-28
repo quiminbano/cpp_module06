@@ -6,7 +6,7 @@
 /*   By: corellan <corellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 11:31:23 by corellan          #+#    #+#             */
-/*   Updated: 2023/06/28 02:17:53 by corellan         ###   ########.fr       */
+/*   Updated: 2023/06/28 14:24:13 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ public:
 	int			getOverFloat(void) const;
 	int			getOverDouble(void) const;
 	int			getPresicion(void) const;
+	int			getSciNot(void) const;
 	std::string	getType(void) const;
 
 private:
@@ -54,6 +55,7 @@ private:
 	int			_overFloat;
 	int			_overDouble;
 	int			_presicion;
+	int			_sciNot;
 	std::string	_type;
 
 	std::string	_analizer(std::string &input);
@@ -64,6 +66,7 @@ private:
 	void		_checkOverInt(std::string &input);
 	void		_checkOverFloat(std::string &input);
 	void		_checkOverDouble(std::string &input);
+	int			_checkExponent(size_t &i, std::string &input, int analysis);
 	void		_printChar(void);
 	void		_printInt(void);
 	void		_printFloat(void);

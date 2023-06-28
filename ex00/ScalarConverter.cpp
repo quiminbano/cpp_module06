@@ -6,13 +6,13 @@
 /*   By: corellan <corellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 13:14:43 by corellan          #+#    #+#             */
-/*   Updated: 2023/06/28 03:29:54 by corellan         ###   ########.fr       */
+/*   Updated: 2023/06/28 15:00:51 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScalarConverter.hpp"
 
-ScalarConverter::ScalarConverter(void) : _integer(0), _float(0), _double(0), _char(0), _flag(0), _overChar(0), _overInt(0), _overFloat(0), _overDouble(0), _presicion(0), _type("unknown")
+ScalarConverter::ScalarConverter(void) : _integer(0), _float(0), _double(0), _char(0), _flag(0), _overChar(0), _overInt(0), _overFloat(0), _overDouble(0), _presicion(0), _sciNot(0), _type("unknown")
 {
 	std::cout << "Default constructor for ScalarConverter class called" << std::endl;
 	return ;
@@ -40,6 +40,7 @@ ScalarConverter	&ScalarConverter::operator=(ScalarConverter const &rhs)
 		this->_overFloat = rhs.getOverFloat();
 		this->_overDouble = rhs.getOverDouble();
 		this->_presicion = rhs.getPresicion();
+		this->_sciNot = rhs.getSciNot();
 		this->_type = rhs.getType();
 	}
 	return (*this);
@@ -63,13 +64,24 @@ int	ScalarConverter::_doubleAnalizer(std::string &input)
 	while (input[i] >= '0' && input[i] <= '9')
 		i++;
 	if (input[i] != '.')
-		return (0);
+	{
+		if (input[i] == 'e' && input[i + 1] != '\0')
+		{
+			this->_sciNot = 1;
+			if (input[i] == '+' || input[i] == '-')
+				i++;
+		}
+		else	
+			return (0);
+	}
 	i++;
 	while (input[i] >= '0' && input[i] <= '9')
 	{
 		i++;
 		j++;
 	}
+	if (input[i] == 'e')
+		return (this->_checkExponent(i, input, 1));
 	this->_presicion = j;
 	if (input.size() == i)
 		return (1);
@@ -88,7 +100,16 @@ int	ScalarConverter::_floatAnalizer(std::string &input)
 	while (input[i] >= '0' && input[i] <= '9')
 		i++;
 	if (input[i] != '.')
-		return (0);
+	{
+		if (input[i] == 'e' && (input[i + 1] != '\0' && input[i + 1] != 'f'))
+		{
+			this->_sciNot = 1;
+			if (input[i] == '+' || input[i] == '-')
+				i++;
+		}
+		else
+			return (0);
+	}
 	i++;
 	while (input[i] >= '0' && input[i] <= '9')
 	{
@@ -96,9 +117,35 @@ int	ScalarConverter::_floatAnalizer(std::string &input)
 		j++;
 	}
 	if (input[i] != 'f')
-		return (0);
+	{
+		if ((input[i]) && (input[i] == 'e' && input[i + 1]))
+			return (this->_checkExponent(i, input, 0));
+		else	
+			return (0);
+	}
 	this->_presicion = j;
 	i++;
+	if (input.size() == i)
+		return (1);
+	return (0);
+}
+
+int	ScalarConverter::_checkExponent(size_t &i, std::string &input, int analysis)
+{
+	this->_sciNot = 1;
+	i++;
+	if ((analysis == 0) && (input[i] == 'f'))
+		return (0);
+	if (input[i] == '+' || input[i] == '-')
+		i++;
+	while (input[i] >= '0' && input[i] <= '9')
+		i++;
+	if (analysis == 0)
+	{
+		if (input[i] != 'f')
+			return (0);
+		i++;
+	}
 	if (input.size() == i)
 		return (1);
 	return (0);
@@ -200,7 +247,7 @@ void	ScalarConverter::_checkOverFloat(std::string &input)
 		this->_double = static_cast<double>(this->_float);
 		return ;
 	}
-	iss2.str(input);
+	iss2.str(input.substr(0, (temp - 1)));
 	iss2 >> num2;
 	this->_overFloat = 1;
 	if (iss2.fail() == false)
@@ -209,6 +256,11 @@ void	ScalarConverter::_checkOverFloat(std::string &input)
 		{
 			this->_integer = static_cast<int>(num2);
 			this->_char = static_cast<char>(num2);
+		}
+		if (std::abs(num2) > FLT_MAX)
+		{
+			this->_overChar = 1;
+			this->_overInt = 1;
 		}
 		if ((std::abs(num2) > DBL_MAX) || (std::abs(num2) < DBL_MIN))
 		{
@@ -271,8 +323,8 @@ void	ScalarConverter::_checkOverDouble(std::string &input)
 	}
 	else
 	{
-		this->_integer = 1;
-		this->_char = 1;
+		this->_overInt = 1;
+		this->_overChar = 1;
 	}
 	return ;
 }
@@ -286,7 +338,7 @@ void	ScalarConverter::_process(std::string &input)
 		this->_float = nanf(input.c_str());
 		this->_flag = 1;
 	}
-	else if ((!this->_type.compare("string")) && (!input.compare("+inf") || !input.compare("+inff")))
+	else if ((!this->_type.compare("string")) && (!input.compare("+inf") || !input.compare("+inff") || !input.compare("inff") || !input.compare("inf")))
 	{
 		this->_double = HUGE_VAL;
 		this->_float = HUGE_VALF;
@@ -348,8 +400,11 @@ void	ScalarConverter::_printFloat(void)
 		std::cout << "impossible" << std::endl;
 		return ;
 	}
-	std::cout << std::fixed;
-	std::cout << std::setprecision(this->_presicion);
+	if (this->_sciNot == 0)
+	{
+		std::cout << std::fixed;
+		std::cout << std::setprecision(this->_presicion);
+	}
 	std::cout << this->_float;
 	std::cout << "f" << std::endl;
 }
@@ -364,8 +419,11 @@ void	ScalarConverter::_printDouble(void)
 		std::cout << "impossible" << std::endl;
 		return ;
 	}
-	std::cout << std::fixed;
-	std::cout << std::setprecision(this->_presicion);
+	if (this->_sciNot == 0)
+	{
+		std::cout << std::fixed;
+		std::cout << std::setprecision(this->_presicion);
+	}
 	std::cout << this->_double;
 	std::cout << std::endl;
 }
@@ -433,6 +491,11 @@ int	ScalarConverter::getOverDouble(void) const
 int	ScalarConverter::getPresicion(void) const
 {
 	return (this->_presicion);
+}
+
+int	ScalarConverter::getSciNot(void) const
+{
+	return (this->_sciNot);
 }
 
 std::string	ScalarConverter::getType(void) const
