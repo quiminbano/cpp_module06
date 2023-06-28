@@ -6,7 +6,7 @@
 /*   By: corellan <corellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 13:14:43 by corellan          #+#    #+#             */
-/*   Updated: 2023/06/28 03:23:53 by corellan         ###   ########.fr       */
+/*   Updated: 2023/06/28 03:29:54 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ std::string	ScalarConverter::_analizer(std::string &input)
 {
 	if (input.size() == 0)
 		return ("char");
-	else if ((input.size() == 1) && (input[0] < '0' && input[0] > '9'))
+	else if ((input.size() == 1) && (input[0] < '0' || input[0] > '9'))
 		return ("char");
 	else if (this->_intAnalizer(input) == 1)
 		return ("int");
