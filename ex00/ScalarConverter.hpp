@@ -6,7 +6,7 @@
 /*   By: corellan <corellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 11:31:23 by corellan          #+#    #+#             */
-/*   Updated: 2023/06/28 14:24:13 by corellan         ###   ########.fr       */
+/*   Updated: 2023/06/30 10:33:01 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,53 +24,54 @@ class	ScalarConverter
 public:
 
 	ScalarConverter(void);
-	ScalarConverter(ScalarConverter const &rhs);
 	~ScalarConverter(void);
 
-	ScalarConverter	&operator=(ScalarConverter const &rhs);
-
-	void		convert(std::string &input);
-	int			getInteger(void) const;
-	float		getFloat(void) const;
-	double		getDouble(void) const;
-	char		getChar(void) const;
-	int			getFlag(void) const;
-	int			getOverChar(void) const;
-	int			getOverInt(void) const;
-	int			getOverFloat(void) const;
-	int			getOverDouble(void) const;
-	int			getPresicion(void) const;
-	int			getSciNot(void) const;
-	std::string	getType(void) const;
+	static void			convert(std::string &input);
+	static int			getInteger(void);
+	static float		getFloat(void);
+	static double		getDouble(void);
+	static char			getChar(void);
+	static int			getFlag(void);
+	static int			getOverChar(void);
+	static int			getOverInt(void);
+	static int			getOverFloat(void);
+	static int			getOverDouble(void);
+	static int			getPresicion(void);
+	static int			getSciNot(void);
+	static std::string	getType(void);
 
 private:
 
-	int			_integer;
-	float		_float;
-	double		_double;
-	char		_char;
-	int			_flag;
-	int			_overChar;
-	int			_overInt;
-	int			_overFloat;
-	int			_overDouble;
-	int			_presicion;
-	int			_sciNot;
-	std::string	_type;
+	static int			_integer;
+	static float		_float;
+	static double		_double;
+	static char			_char;
+	static int			_flag;
+	static int			_overChar;
+	static int			_overInt;
+	static int			_overFloat;
+	static int			_overDouble;
+	static int			_presicion;
+	static int			_sciNot;
+	static std::string	_type;
 
-	std::string	_analizer(std::string &input);
-	int			_intAnalizer(std::string &input);
-	int			_floatAnalizer(std::string &input);
-	int			_doubleAnalizer(std::string &input);
-	void		_process(std::string &input);
-	void		_checkOverInt(std::string &input);
-	void		_checkOverFloat(std::string &input);
-	void		_checkOverDouble(std::string &input);
-	int			_checkExponent(size_t &i, std::string &input, int analysis);
-	void		_printChar(void);
-	void		_printInt(void);
-	void		_printFloat(void);
-	void		_printDouble(void);
+	ScalarConverter(ScalarConverter const &rhs);
+
+	ScalarConverter	&operator=(ScalarConverter const &rhs);
+
+	static std::string	_analizer(std::string &input);
+	static int			_intAnalizer(std::string &input);
+	static int			_floatAnalizer(std::string &input);
+	static int			_doubleAnalizer(std::string &input);
+	static void			_process(std::string &input);
+	static void			_checkOverInt(std::string &input);
+	static void			_checkOverFloat(std::string &input);
+	static void			_checkOverDouble(std::string &input);
+	static int			_checkExponent(size_t &i, std::string &input, int analysis);
+	static void			_printChar(void);
+	static void			_printInt(void);
+	static void			_printFloat(void);
+	static void			_printDouble(void);
 };
 
 #endif
