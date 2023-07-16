@@ -6,7 +6,7 @@
 /*   By: corellan <corellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:23:21 by corellan          #+#    #+#             */
-/*   Updated: 2023/06/30 19:14:53 by corellan         ###   ########.fr       */
+/*   Updated: 2023/07/16 20:12:24 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,35 @@ void	Base::identify(Base *p)
 
 void	Base::identify(Base &p)
 {
-	Base	*ptr;
+	Base b;
 
-	ptr = &p;
-	if (ptr == NULL)
-		std::cout << "Wait! You are trying to analyze a NULL reference" << std::endl;
-	else if (dynamic_cast<A *>(ptr) != NULL)
-		std::cout << "The reference of the Base class passed as a parameter was initialized with the A class" << std::endl;
-	else if (dynamic_cast<B *>(ptr) != NULL)
+	try
+	{
+		b = dynamic_cast<A &>(p);
+	}
+	catch(const std::exception& e)
+	{
+		try
+		{
+			b = dynamic_cast<B &>(p);
+		}
+		catch(const std::exception& e)
+		{
+			try
+			{
+				b = dynamic_cast<C &>(p);
+			}
+			catch(const std::exception& e)
+			{
+				std::cout << "The reference of the Base class passed as a parameter was initialized neither A, B nor C class" << std::endl;
+				return ;
+			}
+			std::cout << "The reference of the Base class passed as a parameter was initialized with the C class" << std::endl;
+			return ;
+		}
 		std::cout << "TThe reference of the Base class passed as a parameter was initialized with the B class" << std::endl;
-	else if (dynamic_cast<C *>(ptr) != NULL)
-		std::cout << "The reference of the Base class passed as a parameter was initialized with the C class" << std::endl;
-	else
-		std::cout << "The reference of the Base class passed as a parameter was initialized neither A, B nor C class" << std::endl;
+		return ;
+	}
+	std::cout << "The reference of the Base class passed as a parameter was initialized with the A class" << std::endl;
 	return ;
 }
