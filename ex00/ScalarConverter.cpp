@@ -6,7 +6,7 @@
 /*   By: corellan <corellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 13:14:43 by corellan          #+#    #+#             */
-/*   Updated: 2023/06/30 10:51:15 by corellan         ###   ########.fr       */
+/*   Updated: 2023/07/17 11:20:14 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ void	ScalarConverter::_checkOverInt(std::string &input)
 		ScalarConverter::_char = static_cast<char>(ScalarConverter::_integer);
 		ScalarConverter::_float = static_cast<float>(ScalarConverter::_integer);
 		ScalarConverter::_double = static_cast<double>(ScalarConverter::_integer);
-		if (ScalarConverter::_integer > 127 || ScalarConverter::_integer < 0)
+		if (ScalarConverter::_integer > 127 || ScalarConverter::_integer < -128)
 			ScalarConverter::_overChar = 1;
 		return ;
 	}
@@ -238,7 +238,7 @@ void	ScalarConverter::_checkOverFloat(std::string &input)
 		}
 		else
 		{
-			if (ScalarConverter::_integer > 127 || ScalarConverter::_integer < 0)
+			if (ScalarConverter::_integer > 127 || ScalarConverter::_integer < -128)
 				ScalarConverter::_overChar = 1;
 		}
 		ScalarConverter::_char = static_cast<char>(ScalarConverter::_float);
@@ -304,11 +304,11 @@ void	ScalarConverter::_checkOverDouble(std::string &input)
 		}
 		else
 		{
-			if (ScalarConverter::_integer > 127 || ScalarConverter::_integer < 0)
+			if (ScalarConverter::_integer > 127 || ScalarConverter::_integer < -128)
 				ScalarConverter::_overChar = 1;
 		}
 		ScalarConverter::_float = static_cast<float>(ScalarConverter::_double);
-		if ((std::abs(ScalarConverter::_double) > FLT_MAX) || (std::abs(ScalarConverter::_double) < FLT_MIN))
+		if ((std::abs(ScalarConverter::_double) > FLT_MAX) || (std::abs(ScalarConverter::_double) < FLT_MIN && ScalarConverter::_double != 0.0))
 			ScalarConverter::_overFloat = 1;
 		return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: corellan <corellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 11:31:23 by corellan          #+#    #+#             */
-/*   Updated: 2023/06/30 10:33:01 by corellan         ###   ########.fr       */
+/*   Updated: 2023/07/17 10:03:33 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@
 class	ScalarConverter
 {
 public:
-
-	ScalarConverter(void);
-	~ScalarConverter(void);
 
 	static void			convert(std::string &input);
 	static int			getInteger(void);
@@ -55,7 +52,9 @@ private:
 	static int			_sciNot;
 	static std::string	_type;
 
+	ScalarConverter(void);
 	ScalarConverter(ScalarConverter const &rhs);
+	~ScalarConverter(void);
 
 	ScalarConverter	&operator=(ScalarConverter const &rhs);
 
